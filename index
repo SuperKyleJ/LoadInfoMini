@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=600, height=600, initial-scale=1.0, user-scalable=no">
+
+    <title>Load Notes</title>
+      <link rel="icon" type="image/x-icon" href="logo.png">
+<style>
+    body {
+    font-family: Arial, sans-serif;
+  width: 600px;
+  height: 600px;
+  overflow: hidden;
+  background-color: #000;
+    color: white;
+}
+  
+</style>
+</head>
+<body>
+
+    <table style="width:100%">
+        <tr>
+            <th>Current Information</th>
+            <td><button onclick="loadAll()">Refresh</button></td>
+
+        </tr>
+        <tr>
+            <td style="width:40%">Dock:</td>
+            <td style="width:40%"><strong id="currentDockFull"></strong></td>
+            <td style="width:20%"><button style="color:red; "onclick="clearDock()">Clear</button></td>
+        </tr>
+        <tr>
+            <td style="width:40%">Trailer:</td>
+            <td style="width:40%"><strong id="currentTrailerFull"></strong></td>
+            <td style="width:20%"><button style="color:red; "onclick="clearTrl()">Clear</button></td>
+        </tr>
+        <tr>
+            <td style="width:40%">Load:</td>
+            <td style="width:40%"><strong id="currentLoadFull"></strong></td>
+            <td style="width:20%"><button style="color:red; "onclick="clearLoad()">Clear</button></td>
+        </tr>
+    </table>
+     <script>
+    const webAppURL3 = "https://script.google.com/macros/s/AKfycbwhZh4BwiyQjaun6s8PHAyLxJs06m3J3ZfX_yn6XslWS-MUm4iWnoluENVrt8T42bRE/exec";
+
+
+async function loadAll() {
+  const response = await fetch(webAppURL3);
+  const data = await response.json();
+document.getElementById("currentDockFull").textContent = data.dockNumber || "None";
+document.getElementById("currentTrailerFull").textContent = data.trailerNumber || "None";
+document.getElementById("currentLoadFull").textContent = data.loadNumber || "None";
+}
+async function saveInfo() {
+  const trailerNumber = document.getElementById("trailerInput").value;
+  const loadNumber = document.getElementById("loadInput").value;
+  const dockNumber = document.getElementById("dockNumber").value;
+
+  const response = await fetch(webAppURL3, {
+    method: "POST",
+    body: JSON.stringify({
+      trailerNumber: trailerNumber,
+      loadNumber: loadNumber,
+      dockNumber: dockNumber
+    })
+  });
+
+  const result = await response.json();
+
+  console.log(result);
+
+  document.getElementById("currentTrailer").textContent = result.trailerNumber;
+  document.getElementById("currentLoad").textContent = result.loadNumber;
+  document.getElementById("currentDock").textContent = result.dockNumber;
+
+  document.getElementById("message").textContent = "Saved";
+
+  setTimeout(() => {
+    document.getElementById("message").textContent = "";
+  }, 2000);
+}
+async function clearDock() {
+  const trailerNumber = document.getElementById("currentTrailerFull").textContent;
+  const loadNumber = document.getElementById("currentLoadFull").textContent;
+  const dockNumber = "";
+  const response = await fetch(webAppURL3, {
+    method: "POST",
+    body: JSON.stringify({
+      trailerNumber: trailerNumber,
+      loadNumber: loadNumber,
+      dockNumber: dockNumber
+    })
+  });
+  const result = await response.json();
+  console.log(result);
+  await loadAll();
+  document.getElementById("message").textContent = "Saved";
+}  
+async function clearLoad() {
+  const trailerNumber = document.getElementById("currentTrailerFull").textContent;
+  const loadNumber = "";
+  const dockNumber = document.getElementById("currentDockFull").textContent;
+  const response = await fetch(webAppURL3, {
+    method: "POST",
+    body: JSON.stringify({
+      trailerNumber: trailerNumber,
+      loadNumber: loadNumber,
+      dockNumber: dockNumber
+    })
+  });
+  const result = await response.json();
+  console.log(result);
+  await loadAll();
+  document.getElementById("message").textContent = "Saved";
+}  
+async function clearTrl() {
+  const trailerNumber = "";
+  const loadNumber = document.getElementById("currentLoadFull").textContent;
+  const dockNumber = document.getElementById("currentDockFull").textContent;
+  const response = await fetch(webAppURL3, {
+    method: "POST",
+    body: JSON.stringify({
+      trailerNumber: trailerNumber,
+      loadNumber: loadNumber,
+      dockNumber: dockNumber
+    })
+  });
+  const result = await response.json();
+  console.log(result);
+  await loadAll();
+  document.getElementById("message").textContent = "Saved";
+}
+ async function clearAll() {
+  const trailerNumber = "";
+  const loadNumber = "";
+  const dockNumber = "";
+  const response = await fetch(webAppURL3, {
+    method: "POST",
+    body: JSON.stringify({
+      trailerNumber: trailerNumber,
+      loadNumber: loadNumber,
+      dockNumber: dockNumber
+    })
+  });
+  const result = await response.json();
+  console.log(result);
+  await loadAll();
+  document.getElementById("message").textContent = "Saved";
+}
+loadAll();
+    
+  </script>
+</body>
+</html>
