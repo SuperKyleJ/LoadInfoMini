@@ -1,40 +1,283 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
-<meta name="viewport" content="width=600, height=600, initial-scale=1.0, user-scalable=no">
 
-    <title>Load Notes</title>
-      <link rel="icon" type="image/x-icon" href="logo.png">
-<style>
-    body {
-    font-family: Arial, sans-serif;
-  width: 600px;
-  height: 600px;
-  overflow: hidden;
-  background-color: #000;
-    color: white;
-}
-  
-</style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="color-scheme" content="dark">
+
+    <title>Load Info Mini</title>
+
+    <link rel="icon" type="image/x-icon" href="logo.png">
+
+    <style>
+
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+
+            width: 600px;
+            height: 600px;
+
+            overflow: hidden;
+
+            background-color: black;
+            color: white;
+
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            box-sizing: border-box;
+
+            padding: 20px;
+
+            display: flex;
+            flex-direction: column;
+
+            gap: 20px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .title {
+            font-size: 42px;
+            font-weight: bold;
+        }
+
+        .refreshButton {
+            font-size: 24px;
+
+            padding: 12px 20px;
+
+            border: none;
+            border-radius: 16px;
+
+            background-color: #1f1f1f;
+            color: white;
+        }
+
+        .card {
+            background-color: #111;
+
+            border-radius: 24px;
+
+            padding: 24px;
+
+            display: flex;
+            flex-direction: column;
+
+            gap: 10px;
+        }
+
+        .label {
+            font-size: 24px;
+
+            opacity: 0.7;
+        }
+
+        .value {
+            font-size: 52px;
+            font-weight: bold;
+
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .clearButton {
+            margin-top: 10px;
+
+            font-size: 20px;
+
+            padding: 10px;
+
+            border: none;
+            border-radius: 14px;
+
+            background-color: #330000;
+            color: #ff6666;
+        }
+
+        .clearAllButton {
+            margin-top: auto;
+
+            font-size: 28px;
+
+            padding: 18px;
+
+            border: none;
+            border-radius: 20px;
+
+            background-color: #440000;
+            color: white;
+        }
+
+        button:active {
+            opacity: 0.7;
+        }
+
+    </style>
 </head>
+
 <body>
 
-    <table style="width:100%">
-        <tr>
-            <th>Current Information</th>
-            <td><button onclick="loadAll()">Refresh</button></td>
+    <div class="header">
+        <div class="title">Load Info</div>
 
-        </tr>
-        <tr>
-            <td style="width:40%">Dock:</td>
-            <td style="width:40%"><strong id="currentDockFull"></strong></td>
-            <td style="width:20%"><button style="color:red; "onclick="clearDock()">Clear</button></td>
-        </tr>
-        <tr>
-            <td style="width:40%">Trailer:</td>
-            <td style="width:40%"><strong id="currentTrailerFull"></strong></td>
-            <td style="width:20%"><button style="color:red; "onclick="clearTrl()">Clear</button></td>
+        <button class="refreshButton" onclick="loadAll()">
+            Refresh
+        </button>
+    </div>
+
+    <div class="card">
+
+        <div class="label">
+            Dock
+        </div>
+
+        <div class="value" id="currentDockFull">
+            Loading...
+        </div>
+
+        <button class="clearButton" onclick="clearDock()">
+            Clear Dock
+        </button>
+
+    </div>
+
+    <div class="card">
+
+        <div class="label">
+            Trailer
+        </div>
+
+        <div class="value" id="currentTrailerFull">
+            Loading...
+        </div>
+
+        <button class="clearButton" onclick="clearTrl()">
+            Clear Trailer
+        </button>
+
+    </div>
+
+    <div class="card">
+
+        <div class="label">
+            Load
+        </div>
+
+        <div class="value" id="currentLoadFull">
+            Loading...
+        </div>
+
+        <button class="clearButton" onclick="clearLoad()">
+            Clear Load
+        </button>
+
+    </div>
+
+    <button class="clearAllButton" onclick="clearAll()">
+        CLEAR ALL
+    </button>
+
+    <script>
+
+        const webAppURL3 = "https://script.google.com/macros/s/AKfycbwhZh4BwiyQjaun6s8PHAyLxJs06m3J3ZfX_yn6XslWS-MUm4iWnoluENVrt8T42bRE/exec";
+
+        async function loadAll() {
+
+            const response = await fetch(webAppURL3);
+
+            const data = await response.json();
+
+            document.getElementById("currentDockFull").textContent =
+                data.dockNumber || "None";
+
+            document.getElementById("currentTrailerFull").textContent =
+                data.trailerNumber || "None";
+
+            document.getElementById("currentLoadFull").textContent =
+                data.loadNumber || "None";
+        }
+
+        async function postData(trailerNumber, loadNumber, dockNumber) {
+
+            const response = await fetch(webAppURL3, {
+
+                method: "POST",
+
+                body: JSON.stringify({
+                    trailerNumber: trailerNumber,
+                    loadNumber: loadNumber,
+                    dockNumber: dockNumber
+                })
+            });
+
+            return await response.json();
+        }
+
+        async function clearDock() {
+
+            const trailerNumber =
+                document.getElementById("currentTrailerFull").textContent;
+
+            const loadNumber =
+                document.getElementById("currentLoadFull").textContent;
+
+            await postData(trailerNumber, loadNumber, "");
+
+            await loadAll();
+        }
+
+        async function clearLoad() {
+
+            const trailerNumber =
+                document.getElementById("currentTrailerFull").textContent;
+
+            const dockNumber =
+                document.getElementById("currentDockFull").textContent;
+
+            await postData(trailerNumber, "", dockNumber);
+
+            await loadAll();
+        }
+
+        async function clearTrl() {
+
+            const loadNumber =
+                document.getElementById("currentLoadFull").textContent;
+
+            const dockNumber =
+                document.getElementById("currentDockFull").textContent;
+
+            await postData("", loadNumber, dockNumber);
+
+            await loadAll();
+        }
+
+        async function clearAll() {
+
+            await postData("", "", "");
+
+            await loadAll();
+        }
+
+        loadAll();
+
+    </script>
+
+</body>
+
+</html>            <td style="width:20%"><button style="color:red; "onclick="clearTrl()">Clear</button></td>
         </tr>
         <tr>
             <td style="width:40%">Load:</td>
