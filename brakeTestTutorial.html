@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="color-scheme" content="dark">
+
+    <title>Brake Test Tutorial</title>
+
+    <link rel="icon" type="image/x-icon" href="logo.png">
+    <style> 
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+
+            width: 600px;
+            height: 600px;
+
+            overflow: hidden;
+
+            background-color: black;
+            color: white;
+
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            box-sizing: border-box;
+
+            padding: 20px;
+
+            display: flex;
+            flex-direction: column;
+
+            gap: 20px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .title {
+            font-size: 32px;
+            font-weight: bold;
+        }
+        .homeButton {
+            margin-top: auto;
+
+            font-size: 20px;
+
+            padding: 12px;
+
+            border: none;
+            border-radius: 20px;
+
+            background-color: #1f1f1f;
+            color: white;
+        }
+        .card {
+            background-color: #111;
+
+            border-radius: 24px;
+
+            padding: 12px;
+
+            display: flex;
+            flex-direction: column;
+
+            gap: 10px;
+        }
+
+        .label {
+            font-size: 12px;
+
+            opacity: 0.7;
+        }
+
+        .value {
+            font-size: 20px;
+            font-weight: bold;
+
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="title">Brake Test Tutorial</div>
+        <button class="homeButton" onclick="restartTutorial()">
+            <i data-lucide="rotate-ccw"> </i>
+        </button>
+        <button class="homeButton" onclick="window.location.href='index3.html'">
+            <i data-lucide="house"> </i>
+        </button>
+        <button class="homeButton" onclick="window.location.href='truckingInfo.html'">
+            <i data-lucide="truck"> </i>
+        </button>
+    </div>
+
+    <div class="card">
+
+        <div class="stepTitle" id="stepTitle"></div>
+
+        <div class="stepInstruction" id="stepInstruction">
+            </div>
+        <div class="stepInstruction2" id="stepInstruction2">
+            </div>
+        <div class="stepInstruction3" id="stepInstruction3">
+            </div>        
+
+      <div class="buttonRow">
+
+        <button onclick="previousStep()">
+        Back
+        </button>
+
+        <button onclick="nextStep()">
+        Next
+        </button>
+
+</div>
+    </div>
+
+    
+    <script src="https://unpkg.com/lucide@latest"></script>
+  <script>
+    lucide.createIcons();
+    const steps = [
+
+    {
+        title: "Step 1: Check governor cut out",
+        instruction: "With the engine running and both tanks above 100 PSI, pump down on the brake pedal until the air pressure is just below 90 PSI. Stop pumping, and the compressor should begin to build air pressure.",
+        instruction2: "Let pressure build until the air stops building. The air pressure should quit building at approximately 120 PSI. You will know the compressor cut out when you hear air exhaust from the air dryer or see the gauge has stopped rising.",
+        instruction3: ""
+    },
+
+    {
+        title: "Step 2: Test air leakage rate",
+        instruction: "Next, shift the transmission into N, turn the engine off and leave the key in the ON position without starting the truck. Keep both feet on the floor and roll the window down.",
+        instruction2: "Release all the brakes by pushing the red and yellow buttons in. Allow the air pressure gauges to stabilize.",
+        instruction3: "Then, to complete your applied pressure test and check for leaks, push the brake pedal down firmly and hold for one minute. Watch the air gauges and listen out the window for signs of air leaks. Air loss should not exceed 4 PSI for a combination vehicle, or 3 PSI for a tractor only."
+    },
+
+    {
+        title: "Step 3: Test low pressure warning signal",
+        instruction: "Next, complete the warning light and buzzer test. To do this, step on and off the brake pedal repeatedly to reduce the air tank pressure. The low air pressure warning signal must come on before the pressure drops to less than 60 PSI in the air tank, or half of the maximum pressure.",
+        instruction2: "",
+        instruction3: ""
+    },
+
+    {
+        title: "Step 4: Check that spring brakes come on automatically",
+        instruction: "Next, complete the protection valve pop-out test. To do this, continue to fan off the air pressure by stepping on and off the brake pedal to reduce tank pressure.",
+        instruction2: "Both buttons on the dash should pop out when the air pressure falls to approximately 20-45 PSI. This will cause the spring brakes to come on.",
+        instruction3: ""
+    },
+    {
+        title: "Step 5: Check rate of air pressure buildup",
+        instruction: "Next, remove the chock blocks and stow them away. Ensure the truck is off while doing this.",
+        instruction2: "Then, enter the cab and start the engine to build up air pressure. Hold the accelerator at around 1200 RPM and watch the air gauges.",
+        instruction3: "When the engine is at operating rpms, the pressure should build from 85 to 100 PSI within 45 seconds."
+    },
+    {
+        title: "Step 6: Trailer and parking brake test",
+        instruction: "Next, place the transmission into D and push the yellow button in. Gently pull against the trailer parking brakes. Your unit should move but not drag the trailer.",
+        instruction2: "Then, pull the yellow button out and push the red button in. Gently pull against the tractor parking brakes. Your unit should not move.",
+        instruction3: ""
+    },
+    {
+        title: "Step 7: Service brake test",
+        instruction: "For your final test, push the yellow button in. Both buttons should be pushed in at this point.",
+        instruction2: "Now, drive forward slowly at about 5 mph and apply the brake firmly. Your unit should stop with no pulling to either side and without any grinding noises.",
+        instruction3: ""
+    }
+
+];
+let currentStep = 0;
+function showStep() {
+
+    const step = steps[currentStep];
+
+    document.getElementById("stepTitle").textContent =
+        step.title;
+
+    document.getElementById("stepInstruction").textContent =
+        step.instruction;
+    document.getElementById("stepInstruction2").textContent =
+        step.instruction2;
+    document.getElementById("stepInstruction3").textContent =
+        step.instruction3;
+};
+function nextStep() {
+
+    if (currentStep < steps.length - 1) {
+
+        currentStep++;
+
+        showStep();
+    }
+};
+function previousStep() {
+
+    if (currentStep > 0) {
+
+        currentStep--;
+
+        showStep();
+    }
+};
+function restartTutorial() {
+
+    if (currentStep > 0) {
+
+        currentStep = 0;
+
+        showStep();
+    }
+}
+showStep();
+  </script>
+</body>
+</html>
